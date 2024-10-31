@@ -1,10 +1,30 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { LoggerMiddleware, LoggerModule } from './modules/logger';
+import { ConfigModule } from '@nestjs/config';
+import { validate } from './env-validation';
+import appConfig from './shared/config/app.config';
+import { TerminusModule } from '@nestjs/terminus';
+import { HealthModule } from './modules/health';
+import { DrizzleModule } from './modules/database/drizzle.module';
+import { DatabaseModule } from './modules/database/database.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      validate,
+      load: [appConfig],
+      isGlobal: true,
+      envFilePath: ['.env'],
+    }),
+    TerminusModule,
+    LoggerModule.register(),
+    HealthModule,
+    DrizzleModule,
+    DatabaseModule,
+  ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
