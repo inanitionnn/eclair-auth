@@ -10,6 +10,7 @@ import { AppConfigType } from '../../shared/types';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService<AppConfigType>) => ({
         type: 'single',
+        url: `redis://${configService.get<string>('redisHost')}:${configService.get<number>('redisPort')}`,
         options: {
           port: configService.get<number>('redisPort'),
           host: configService.get<string>('redisHost'),

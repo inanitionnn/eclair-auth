@@ -3,10 +3,9 @@ import { TerminusModule } from '@nestjs/terminus';
 import { DatabaseHealthIndicator, EnvHealthIndicator } from './indicators';
 import { HealthController } from './health.controller';
 import { DatabaseModule } from '../database/database.module';
-import { RedisHealthModule } from '@nestjs-modules/ioredis';
 
 @Module({
-  imports: [TerminusModule, DatabaseModule, RedisHealthModule],
+  imports: [TerminusModule, DatabaseModule],
   controllers: [HealthController],
   providers: [EnvHealthIndicator, DatabaseHealthIndicator],
 })
