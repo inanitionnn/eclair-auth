@@ -1,51 +1,23 @@
-###################
-# BUILD FOR LOCAL DEVELOPMENT
-###################
+# Start from a Node.js image
+FROM node:18-alpine
 
-FROM node:18-alpine As development
-
+# Set working directory in the container
 WORKDIR /usr/src/app
 
-COPY --chown=node:node package.json ./
-COPY --chown=node:node yarn.lock ./
+# Copy package.json and yarn.lock files for dependency installation
+COPY package.json yarn.lock ./
 
-RUN yarn install --frozen-lockfile
+# Install dependencies
+RUN yarn install
 
-# Bundle app source
-COPY --chown=node:node . .
+# Copy the entire project to the working directory
+COPY . .
 
-USER node
+# Expose the port the app runs on
+EXPOSE 3000
 
-###################
-# BUILD FOR PRODUCTION
-###################
+# Set environment variables for development
+ENV NODE_ENV=development
 
-FROM node:18-alpine As build
-
-WORKDIR /usr/src/app
-
-COPY --chown=node:node package.json ./
-COPY --chown=node:node yarn.lock ./
-
-COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
-
-COPY --chown=node:node . .
-
-RUN yarn build
-
-ENV NODE_ENV production
-
-RUN yarn install --frozen-lockfile --only=production && yarn cache clean --force
-
-USER node
-
-###################
-# PRODUCTION
-###################
-
-FROM node:18-alpine As production
-
-COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
-COPY --chown=node:node --from=build /usr/src/app/dist ./dist
-
-CMD [ "node", "dist/src/main.js" ]
+# Command to run the NestJS development server with hot-reloading
+CMD ["yarn", "start:dev"]

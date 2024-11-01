@@ -8,25 +8,39 @@ services:
     depends_on:
       - redis
       - postgres
+    networks:
+      - app-network
 
   redis:
     image: redis:latest
     restart: always
-    volumes:
-      - redis_data:/data
+    # volumes:
+    #   - redis_data:/data
     ports:
-      - ${REDIS_PORT}
+      - ${REDIS_PORT}:${REDIS_PORT}
+    networks:
+      - app-network
 
   postgres:
     image: postgres:latest
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     restart: always
+    env_file:
+      - .env
     environment:
       POSTGRES_DB: ${POSTGRES_NAME}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    # volumes:
+    #   - postgres_data:/var/lib/postgresql/data
 
 volumes:
   redis_data:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
