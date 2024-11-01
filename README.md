@@ -1,5 +1,7 @@
 # Eclair (auth template)
 
+**Note**: Redis does not work in Docker Compose due to the use of the `@nestjs-modules/ioredis` library. For more information, refer to the [issue](https://github.com/nest-modules/ioredis/issues/280).
+
 ## Introduction
 
 Eclair-auth is a starting template for a user REST API authentication, designed with scalability and maintainability in mind.
