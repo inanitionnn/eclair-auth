@@ -10,7 +10,28 @@ class EnvironmentVariables {
   PORT: number;
 
   @IsString()
-  DATABASE_URL: string;
+  POSTGRES_USER: string;
+
+  @IsString()
+  POSTGRES_PASSWORD: string;
+
+  @IsString()
+  POSTGRES_PORT: string;
+
+  @IsString()
+  POSTGRES_HOST: string;
+
+  @IsString()
+  POSTGRES_NAME: string;
+
+  @IsString()
+  REDIS_HOST: string;
+
+  @IsString()
+  REDIS_PORT: string;
+
+  @IsString()
+  JWT_SECRET: string;
 }
 
 export function validate(config: Record<string, unknown>) {

@@ -1,14 +1,18 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { LoggerMiddleware, LoggerModule } from './modules/logger';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { validate } from './env-validation';
 import appConfig from './shared/config/app.config';
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthModule } from './modules/health';
 import { DrizzleModule } from './modules/database/drizzle.module';
 import { DatabaseModule } from './modules/database/database.module';
-import { RedisModule } from '@nestjs-modules/ioredis';
-import { AppConfigType } from './shared/types';
+import { UserModule } from './modules/users/user.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtGuard } from './modules/auth/guards';
+import { JwtStrategy } from './modules/auth/strategies';
+import { RedisModule } from './modules/redis/redis.module';
 
 @Module({
   imports: [
@@ -18,19 +22,21 @@ import { AppConfigType } from './shared/types';
       isGlobal: true,
       envFilePath: ['.env'],
     }),
-    RedisModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService<AppConfigType>) => ({
-        type: 'single',
-        url: configService.get<string>('redis'),
-      }),
-      inject: [ConfigService],
-    }),
     TerminusModule,
     LoggerModule.register(),
     HealthModule,
     DrizzleModule,
     DatabaseModule,
+    UserModule,
+    AuthModule,
+    RedisModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtGuard,
+    },
+    JwtStrategy,
   ],
 })
 export class AppModule implements NestModule {

@@ -12,7 +12,7 @@ export const PG_CONNECTION = 'PG_CONNECTION';
       provide: PG_CONNECTION,
       inject: [ConfigService],
       useFactory: async (config: ConfigService<AppConfigType>) =>
-        drizzle(config.get('postgres')),
+        drizzle(config.get('postgresUrl')),
     },
   ],
   exports: [PG_CONNECTION],
