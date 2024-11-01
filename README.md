@@ -21,9 +21,9 @@ Eclair-auth is a starting template for a user REST API authentication, designed 
 
 ## Part 2 - What If (scaling)
 
-Scaling can be approached from both the backend and DevOps perspectives. From a DevOps standpoint, one option is to create a database cluster to enhance the speed of record writing and retrieval. Additionally, deploying multiple backend instances can help manage traffic effectively, either by routing requests through a load balancer or through containerization. Vertical scaling is also an option by increasing the capacity of each individual server.
+Scaling can be approached from both the backend and DevOps perspectives. From a DevOps standpoint, one option is to create a database cluster to enhance the speed of record writing and retrieval. Additionally, deploying multiple backend instances can help manage traffic effectively. Vertical scaling is also an option by increasing the capacity of each individual server.
 
-On the backend side, we can focus on minimizing load through rate limiting, caching, and implementing message queues. Offloading long-running tasks to workers or microservices can further improve performance. It's also essential to optimize the database using indexing and normalization techniques to ensure efficient data management.
+On the backend side, we can focus on minimizing load through rate limiting, caching, and implementing message queues. Redirecting long-running tasks to workers or microservices can further improve performance. It's also essential to optimize the database using indexing and normalization techniques to ensure efficient data management.
 
 ## Part 3 - Social Login
 
